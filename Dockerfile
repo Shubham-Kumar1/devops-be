@@ -1,8 +1,16 @@
-FROM node:20-alpine
+FROM node:20-slim
 WORKDIR /app
-COPY package.* .
-COPY /prisma .
+
+RUN apt-get update && apt-get install -y openssl && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY package*.json ./
+RUN npm install --omit=dev
+
+COPY prisma ./prisma/
 RUN npx prisma generate
-RUN npm install
+
 COPY . .
-CMD [ "node","server.js" ]
+
+EXPOSE 4400
+CMD ["node", "server.js"]
