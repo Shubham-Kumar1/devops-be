@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import client from "prom-client";
 
 dotenv.config({
-    path: './.env'
+  path: './.env'
 });
 
 const app = express();
@@ -27,14 +27,14 @@ const httpRequestDurationSeconds = new client.Histogram({
 });
 app.use((req, res, next) => {
   const start = Date.now();
-  
+
   res.on('finish', () => {
     const duration = (Date.now() - start) / 1000;
     httpRequestsTotal.inc({ method: req.method, status_code: res.statusCode });
-    httpRequestDurationSeconds.observe({ 
-      method: req.method, 
-      route: req.originalUrl, 
-      status_code: res.statusCode 
+    httpRequestDurationSeconds.observe({
+      method: req.method,
+      route: req.originalUrl,
+      status_code: res.statusCode
     }, duration);
   });
 
@@ -43,7 +43,10 @@ app.use((req, res, next) => {
 
 app.use(cors());
 app.use(express.json());
-
+app.get("/", (_req, res) => {
+  console.log("Home test route")
+  res.send("Home test route")
+})
 app.use("/api/auth", authRoutes);
 app.use("/api/todos", todoRoutes);
 
