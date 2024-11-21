@@ -1,16 +1,18 @@
+import dotenv from "dotenv";
+dotenv.config({ path: './.env' });
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import todoRoutes from "./routes/todoRoutes.js";
 import { PrismaClient } from "@prisma/client";
-import dotenv from "dotenv";
 import client from "prom-client";
 
-dotenv.config({ path: './.env' });
+app.use(cors());
+app.use(express.json());
 
 const app = express();
 const prisma = new PrismaClient();
-const PORT = process.env.PORT || 4400;
+const PORT = 4400;
 const register = client.register;
 
 const httpRequestsTotal = new client.Counter({
@@ -46,9 +48,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cors());
-app.use(express.json());
-
 app.get("/", (_req, res) => {
   console.log("GET request to '/' route");
   res.send("Home test route");
@@ -77,17 +76,17 @@ app.get('/metrics', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on :${PORT}`);
 });
 
-async function testConnection() {
-  try {
-    await prisma.$connect();
-    console.log('Successfully connected to the database!');
-  } catch (error) {
-    console.error('Error connecting to the database:', error);
-  } finally {
-    await prisma.$disconnect();
-  }
-}
-testConnection();
+// async function testConnection() {
+//   try {
+//     await prisma.$connect();
+//     console.log('Successfully connected to the database!');
+//   } catch (error) {
+//     console.error('Error connecting to the database:', error);
+//   } finally {
+//     await prisma.$disconnect();
+//   }
+// }
+// testConnection();
