@@ -1,0 +1,50 @@
+version: '3.8'
+services:
+  react-frontend:
+    image: kumarshubham16/devops-fe
+    container_name: react-frontend-container
+    environment:
+      - REACT_APP_HOSTNAME=localhost
+    ports:
+      - "3000:3000"
+    depends_on:
+      - node-backend
+    networks:
+      - app-network
+
+  # Backend: Node.js
+  node-backend:
+    image: kumarshubham16/devops-be
+    container_name: node-backend-container
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres-db:5432/todoapp
+      - JWT_SECRET=abcd
+    ports:
+      - "4400:4400"
+    depends_on:
+      - postgres-db
+    networks:
+      - app-network
+
+  # Database: PostgreSQL
+  postgres-db:
+    image: postgres:latest
+    container_name: postgres-db-container
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=todoapp
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+    driver: local
