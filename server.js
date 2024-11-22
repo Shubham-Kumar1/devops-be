@@ -6,11 +6,10 @@ import authRoutes from "./routes/authRoutes.js";
 import todoRoutes from "./routes/todoRoutes.js";
 import { PrismaClient } from "@prisma/client";
 import client from "prom-client";
-
+const app = express();
 app.use(cors());
 app.use(express.json());
 
-const app = express();
 const prisma = new PrismaClient();
 const PORT = 4400;
 const register = client.register;
