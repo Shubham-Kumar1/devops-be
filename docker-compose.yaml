@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   react-frontend:
-    image: kumarshubham16/devops-fe
+    image: kumarshubham16/devops-fe:2.0
     container_name: react-frontend-container
     environment:
       - REACT_APP_HOSTNAME=localhost
