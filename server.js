@@ -62,7 +62,7 @@ app.use("/api/todos", (req, res, next) => {
   next();
 }, todoRoutes);
 
-app.get('/metrics', async (req, res) => {
+app.get('/backend/metrics', async (req, res) => {
   console.log("GET request to '/metrics' route");
   try {
     res.set('Content-Type', register.contentType);
