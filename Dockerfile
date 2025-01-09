@@ -1,7 +1,8 @@
 FROM node:20-slim
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y openssl && \
+# Install necessary packages including openssl and netcat-openbsd
+RUN apt-get update && apt-get install -y openssl netcat-openbsd && \
     rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./

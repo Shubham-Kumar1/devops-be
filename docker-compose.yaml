@@ -1,10 +1,11 @@
-version: '3.8'
+version: '3.9'
 services:
   react-frontend:
-    image: kumarshubham16/devops-fe:2.0
+    build:
+      context: ../devops-fe
     container_name: react-frontend-container
     environment:
-      - REACT_APP_HOSTNAME=localhost
+      - REACT_APP_HOSTNAME=localhost:4400
     ports:
       - "3000:3000"
     depends_on:
@@ -14,7 +15,8 @@ services:
 
   # Backend: Node.js
   node-backend:
-    image: kumarshubham16/devops-be
+    build:
+      context: .
     container_name: node-backend-container
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@postgres-db:5432/todoapp
@@ -25,6 +27,15 @@ services:
       - postgres-db
     networks:
       - app-network
+    command: >
+      sh -c "
+      until nc -z postgres-db 5432; do
+        echo 'Waiting for database...';
+        sleep 2;
+      done;
+      echo 'Database is ready!';
+      npx prisma migrate dev --name init && node server.js
+      "
 
   # Database: PostgreSQL
   postgres-db:
@@ -47,4 +58,3 @@ networks:
 
 volumes:
   postgres-data:
-    driver: local
