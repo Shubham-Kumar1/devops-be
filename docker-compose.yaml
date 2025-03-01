@@ -5,7 +5,7 @@ services:
       context: ../devops-fe
     container_name: react-frontend-container
     environment:
-      - REACT_APP_HOSTNAME=localhost:4400
+      - REACT_APP_BACKENDHOST=localhost:4400
     ports:
       - "3000:3000"
     depends_on:
