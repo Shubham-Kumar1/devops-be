@@ -43,19 +43,13 @@ jobs:
             --env DATABASE_URL="${{ secrets.DATABASE_URL }}" \
             --env JWT_SECRET="${{ secrets.JWT_SECRET }}" \
             backend
-      
-      - name: Verify the container is running and Images
-        run: |
-          docker images
-          docker ps -a
+      - name: sleep for 10 seconds
+        run: sleep 10
       
       - name: Check container logs
         run: |
           echo "🔍 Checking container logs..."
           docker logs backend-container
-      
-      - name: sleep for 5 seconds
-        run: sleep 5
 
       - name: check again the docker container
         run: docker ps -a
