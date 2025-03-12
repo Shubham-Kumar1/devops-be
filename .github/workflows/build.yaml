@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: secrets
     steps:
       - name: Clone the repo
         uses: actions/checkout@v4
