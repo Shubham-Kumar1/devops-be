@@ -19,7 +19,7 @@ jobs:
         run: docker build -t backend .
 
       - name: Run the Docker container with the secrets
-        run: docker run -d -p 4400:4400 {secrets.DATABASE_URL} {secrets.JWT_SECRET} backend
+        run: docker run -d -p 4400:4400 -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e JWT_SECRET=${{ secrets.JWT_SECRET }} backend
       
       - name: Verify the container is running and Images
         run: |
@@ -37,6 +37,3 @@ jobs:
           docker stop $(docker ps -a -q)
           docker rm $(docker ps -a -q)
           docker rmi $(docker images -q)
-
-
-
