@@ -15,32 +15,50 @@ jobs:
         with:
           node-version: '18'
       
+      - name: Validate Secrets
+        run: |
+          if [ -z "${{ secrets.DATABASE_URL }}" ]; then
+            echo "❌ DATABASE_URL is empty or not set"
+            exit 1
+          else
+            echo "✅ DATABASE_URL is set"
+          fi
+          
+          if [ -z "${{ secrets.JWT_SECRET }}" ]; then
+            echo "❌ JWT_SECRET is empty or not set"
+            exit 1
+          else
+            echo "✅ JWT_SECRET is set"
+          fi
+
       - name: Build Docker image
         run: docker build -t backend .
 
-      - name: Check the secrets are set
+      - name: Run the Docker container with secrets
         run: |
-          echo "DATABASE_URL: ${{ secrets.DATABASE_URL }}"
-          echo "JWT_SECRET: ${{ secrets.JWT_SECRET }}"
-
-      - name: Run the Docker container with the secrets
-        run: docker run -d -p 4400:4400 -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e JWT_SECRET=${{ secrets.JWT_SECRET }} backend
+          docker run -d \
+            -p 4400:4400 \
+            --env DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            --env JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+            backend
       
       - name: Verify the container is running and Images
         run: |
           docker images
           docker ps -a
       
+      - name: Check container logs
+        run: |
+          echo "🔍 Checking container logs..."
+          docker logs $(docker ps -q -n 1)
+      
       - name: sleep for 5 seconds
         run: sleep 5
 
       - name: check again the docker container
         run: docker ps -a
-      
-      - name: check the logs of the container
-        run: docker logs $(docker ps -a -q)
 
-      - name: Stop the contaienr and remove all the traces
+      - name: Stop the container and remove all traces
         run: | 
           docker stop $(docker ps -a -q)
           docker rm $(docker ps -a -q)
