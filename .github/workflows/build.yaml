@@ -12,14 +12,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - name: Dockerize the app
+      - name: Build the Docker Image
+        with: 
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          env: # Or as an environment variable
+            DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: |
           docker build -t backend .
-          docker run backend
-      - name: check if the container is running
+          docker run -d -p 4400:4400 backend
+      - name: Verify the image and state of container
         run: |
           docker ps
-      - name: Get the output of docker images and docker ps -a
-        run: |
           docker images
-          docker ps -a
+          
