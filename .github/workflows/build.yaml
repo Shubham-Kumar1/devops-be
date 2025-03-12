@@ -18,6 +18,6 @@ jobs:
         run: npm run build
 
       - name: Archive production build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: build
