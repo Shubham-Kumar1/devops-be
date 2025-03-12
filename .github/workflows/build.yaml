@@ -31,6 +31,9 @@ jobs:
 
       - name: check again the docker container
         run: docker ps -a
+      
+      - name: check the logs of the container
+        run: docker logs $(docker ps -a -q)
 
       - name: Stop the contaienr and remove all the traces
         run: | 
