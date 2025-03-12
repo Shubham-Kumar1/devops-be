@@ -18,11 +18,11 @@ jobs:
           env: # Or as an environment variable
             DATABASE_URL: ${{ secrets.DATABASE_URL }}
             JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        run: |
-          docker build -t backend .
-          docker run -d -p 4400:4400 backend
+          run: |
+            docker build -t backend .
+            docker run -d -p 4400:4400 backend
       - name: Verify the image and state of container
         run: |
           docker ps
           docker images
-          
+
