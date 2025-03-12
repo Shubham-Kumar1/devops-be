@@ -18,6 +18,11 @@ jobs:
       - name: Build Docker image
         run: docker build -t backend .
 
+      - name: check the secrets are set
+        run: |
+          echo "DATABASE_URL: ${{ secrets.DATABASE_URL }}"
+          echo "JWT_SECRET: ${{ secrets.JWT_SECRET }}"
+
       - name: Run the Docker container with the secrets
         run: docker run -d -p 4400:4400 -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e JWT_SECRET=${{ secrets.JWT_SECRET }} backend
       
