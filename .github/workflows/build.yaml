@@ -33,8 +33,10 @@ jobs:
         run: docker ps -a
 
       - name: Stop the contaienr and remove all the traces
-        run: docker stop $(docker ps -a -q)
-        run: docker rm $(docker ps -a -q)
-        run: docker rmi $(docker images -q)
+        run: | 
+          docker stop $(docker ps -a -q)
+          docker rm $(docker ps -a -q)
+          docker rmi $(docker images -q)
+
 
 
