@@ -7,22 +7,34 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Clone the repo
+        uses: actions/checkout@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - name: Build the Docker Image
-        with: 
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          env: # Or as an environment variable
-            DATABASE_URL: ${{ secrets.DATABASE_URL }}
-            JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          run: |
-            docker build -t backend .
-            docker run -d -p 4400:4400 backend
-      - name: Verify the image and state of container
+      
+      - name: Build Docker image
+        run: docker build -t backend .
+
+      - name: Run the Docker container with the secrets
+        run: docker run -d -p 4400:4400 {secrets.DATABASE_URL} {secrets.JWT_SECRET} backend
+      
+      - name: Verify the container is running and Images
         run: |
-          docker ps
           docker images
+          docker ps -a
+      
+      - name: sleep for 5 seconds
+        run: sleep 5
+
+      - name: check again the docker container
+        run: docker ps -a
+
+      - name: Stop the contaienr and remove all the traces
+        run: docker stop $(docker ps -a -q)
+        run: docker rm $(docker ps -a -q)
+        run: docker rmi $(docker images -q)
+
 
