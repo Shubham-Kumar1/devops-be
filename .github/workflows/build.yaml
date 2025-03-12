@@ -38,6 +38,7 @@ jobs:
       - name: Run the Docker container with secrets
         run: |
           docker run -d \
+            --name backend-container \
             -p 4400:4400 \
             --env DATABASE_URL="${{ secrets.DATABASE_URL }}" \
             --env JWT_SECRET="${{ secrets.JWT_SECRET }}" \
@@ -51,7 +52,7 @@ jobs:
       - name: Check container logs
         run: |
           echo "🔍 Checking container logs..."
-          docker logs $(docker ps -q -n 1)
+          docker logs backend-container
       
       - name: sleep for 5 seconds
         run: sleep 5
